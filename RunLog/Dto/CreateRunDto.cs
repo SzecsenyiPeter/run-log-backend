@@ -1,30 +1,31 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace RunLog.DTO
 {
     public class CreateRunDto
     {
-        [DataMember(Name="title")]
+        [JsonPropertyName("title")]
         [Required]
         public string Title { get; set; }
-        [DataMember(Name="description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [DataMember(Name="durationInSeconds")]
+        [JsonPropertyName("durationInSeconds")]
         [Required]
         public int Duration { get; set; }
 
-        [DataMember(Name="distanceInMeters")]
+        [JsonPropertyName("distanceInMeters")]
         [Required]
         public int Distance { get; set; }
 
-        [DataMember(Name="heartRate")]
+        [JsonPropertyName("heartRate")]
         [Required]
         public int HeartRate { get; set; }
 
-        [DataMember(Name="date")]
+        [JsonPropertyName("date")]
         [Required]
         public DateTime Date { get; set; }
     }

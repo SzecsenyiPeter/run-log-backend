@@ -40,11 +40,10 @@ namespace RunLog.Controllers
                 return runDto;
             });
             return runsDto;
-
         }
 
         [HttpPost]
-        public void CreateRun(CreateRunDto createRunDto)
+        public bool CreateRun(CreateRunDto createRunDto)
         {
             Run run = new Run
             {
@@ -57,6 +56,32 @@ namespace RunLog.Controllers
             };
             runLogContext.Runs.Add(run);
             runLogContext.SaveChanges();
+            return true;
+        }
+        [HttpPut("{id:int}")]
+        public bool UpdateRun(int id,  CreateRunDto createRunDto)
+        {
+            Run newRun = new Run
+            {
+                Id = id,
+                Title = createRunDto.Title,
+                Description = createRunDto.Description,
+                Distance = createRunDto.Distance,
+                Duration = createRunDto.Duration,
+                HeartRate = createRunDto.HeartRate,
+                Date = createRunDto.Date
+            };
+            Run oldRun = runLogContext.Runs.Find(id);
+            runLogContext.Entry(oldRun).CurrentValues.SetValues(newRun);
+            runLogContext.SaveChanges();
+            return true;
+        }
+        [HttpDelete("{id:int}")]
+        public bool DeleteRun(int id)
+        {
+            runLogContext.Runs.Remove(runLogContext.Runs.Find(id));
+            runLogContext.SaveChanges();
+            return true;
         }
     }
 }
