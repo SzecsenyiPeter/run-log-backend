@@ -10,6 +10,7 @@ namespace RunLog.Data
     public class RunLogContext: DbContext
     {
         public DbSet<Run> Runs { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
