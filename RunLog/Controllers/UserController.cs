@@ -1,55 +1,52 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RunLog.Data;
 using RunLog.Dto;
+using RunLog.Exceptions;
 using RunLog.Model;
+using RunLog.Service;
 using System;
 
 namespace RunLog.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("users")]
     public class UserController : ControllerBase
     {
-        private readonly RunLogContext runLogContext;
+        private readonly UserService userService;
 
-        public UserController()
-        {
-            runLogContext = new RunLogContext();
-        }
         [Route("register")]
         [HttpPost]
-        public bool RegisterUser(CreateUser createUser)
+        public IActionResult RegisterUser(UserDto createUser)
         {
-
-            User newUser = new User
+            try
             {
-                Username = createUser.Username,
-                PasswordHash = HashString(createUser.Password),
-                UserType = createUser.UserType,
+                userService.RegisterUser(createUser);
+                return StatusCode(201);
+            }
+            catch (UserAlreadyExistsException exception)
+            {
+                return StatusCode(409, exception.Message);
+            }
 
-            };
-            runLogContext.Users.Add(newUser);
-            runLogContext.SaveChanges();
-            return true;
         }
-        static string HashString(string text, string salt = "")
+
+        [Route("login")]
+        [HttpPost]
+        public ActionResult<UserDto> LoginUser(LoginUserDto loginUserDto)
         {
-            if (String.IsNullOrEmpty(text))
+            User user = userService.LoginUser(loginUserDto.Username, loginUserDto.Password);
+            if(user != null)
             {
-                return String.Empty;
+                Response.Cookies.Append(BasicAuthenticationHandler.AUTHORIZATION_COOKIE_KEY, user.Username + ":" + user.PasswordHash);
+                return Ok(user);
+            }
+            else
+            {
+                return StatusCode(401, "User authentication failed!");
             }
 
-            using (var sha = new System.Security.Cryptography.SHA256Managed())
-            {
-                byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text + salt);
-                byte[] hashBytes = sha.ComputeHash(textBytes);
-
-                string hash = BitConverter
-                    .ToString(hashBytes)
-                    .Replace("-", String.Empty);
-
-                return hash;
-            }
         }
     }
 }

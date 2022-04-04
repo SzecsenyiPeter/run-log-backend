@@ -4,7 +4,7 @@ using RunLog.Model;
 
 namespace RunLog.Dto
 {
-    public class CreateUser
+    public class UserDto
     {
         [JsonPropertyName("username")]
         [Required]
