@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RunLog.Service
 {
-    interface UserService
+    public interface UserService
     {
         public void RegisterUser(UserDto user);
         public User LoginUser(string username, string password);

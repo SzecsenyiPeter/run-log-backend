@@ -14,8 +14,8 @@ namespace RunLog.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer("Data Source=DESKTOP-1TF0AJT;Initial Catalog=RunLogDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; User Id=run_log_backend; Password=run_log_backend_password");
-            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-1TF0AJT;Initial Catalog=RunLogDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; User Id=run_log_backend; Password=run_log_backend_password");
+            //optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
             
         }
 

@@ -16,6 +16,12 @@ namespace RunLog.Controllers
     {
         private readonly UserService userService;
 
+        public UserController(UserService userService)
+        {
+            this.userService = userService;
+
+        }
+
         [Route("register")]
         [HttpPost]
         public IActionResult RegisterUser(UserDto createUser)
