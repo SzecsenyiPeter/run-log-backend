@@ -20,8 +20,12 @@ namespace RunLog.Service
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock)
-            : base(options, logger, encoder, clock) { }
+            ISystemClock clock,
+            UserService userService)
+            : base(options, logger, encoder, clock) 
+        {
+            this.userService = userService;
+        }
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             if(!Request.Cookies.ContainsKey("RunLogAuthorization"))

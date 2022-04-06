@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RunLog.Data;
 using RunLog.Dto;
 using RunLog.DTO;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace RunLog.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     [Route("runs")]
     public class RunsController : ControllerBase
     {
