@@ -12,5 +12,7 @@ namespace RunLog.Service
         public void RegisterUser(UserDto user);
         public User LoginUser(string username, string password);
         public User AuthenticateUser(string username, string passwordHash);
+        public List<string> GetAthletes(string coachName = null);
+        public void SetCoachOfAthlete(string coachName, string username);
     }
 }

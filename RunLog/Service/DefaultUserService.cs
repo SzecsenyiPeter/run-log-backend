@@ -42,7 +42,30 @@ namespace RunLog.Service
         }
         public User AuthenticateUser(string username, string passwordHash)
         {
-            return runLogContext.Users.Where(user => user.Username == username && user.PasswordHash == passwordHash).FirstOrDefault();
+            return runLogContext
+                .Users
+                .Where(user => user.Username == username && user.PasswordHash == passwordHash)
+                .FirstOrDefault();
+        }
+
+        public List<string> GetAthletes(string coachName = null)
+        {
+            return runLogContext
+                .Users
+                .Where(user => user.CoachedBy.Username == coachName && user.UserType == UserTypes.ATHLETE)
+                .ToList()
+                .ConvertAll(user => user.Username);
+        }
+        public void SetCoachOfAthlete(string coachName, string username)
+        {
+            User coach = GetCoach(coachName);
+            User user = GetCoach(username);
+            user.CoachedBy = coach;
+            runLogContext.SaveChanges();
+        }
+        private User GetCoach(string coachName)
+        {
+            return runLogContext.Users.Where(user => user.Username == coachName).FirstOrDefault();
         }
         static string HashString(string text, string salt = "")
         {
@@ -63,5 +86,6 @@ namespace RunLog.Service
                 return hash;
             }
         }
+
     }
 }

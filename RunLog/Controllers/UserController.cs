@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RunLog.Data;
 using RunLog.Dto;
 using RunLog.Exceptions;
 using RunLog.Model;
 using RunLog.Service;
-using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace RunLog.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     [Route("users")]
     public class UserController : ControllerBase
     {
@@ -23,6 +23,7 @@ namespace RunLog.Controllers
         }
 
         [Route("register")]
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult RegisterUser(UserDto createUser)
         {
@@ -39,6 +40,7 @@ namespace RunLog.Controllers
         }
 
         [Route("login")]
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult<UserDto> LoginUser(LoginUserDto loginUserDto)
         {
@@ -52,7 +54,18 @@ namespace RunLog.Controllers
             {
                 return StatusCode(401, "User authentication failed!");
             }
-
+        }
+        [Route("athletes")]
+        [HttpGet]
+        public List<string> GetAthletes(bool showUnaffiliated)
+        {
+            return userService.GetAthletes(showUnaffiliated? User.FindFirstValue(ClaimTypes.Name) : null);
+        }
+        [Route("athletes/{athleteName}/coach")]
+        [HttpPatch]
+        public void SetAthletesCoach(string athleteName)
+        {
+            userService.SetCoachOfAthlete(User.FindFirstValue(ClaimTypes.Name), athleteName);
         }
     }
 }

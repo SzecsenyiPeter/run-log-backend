@@ -4,9 +4,11 @@ using RunLog.Data;
 using RunLog.Dto;
 using RunLog.DTO;
 using RunLog.Model;
+using RunLog.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RunLog.Controllers
@@ -16,74 +18,33 @@ namespace RunLog.Controllers
     [Route("runs")]
     public class RunsController : ControllerBase
     {
-        private readonly RunLogContext runLogContext;
+        private readonly RunService runService;
 
-        public RunsController()
+        public RunsController(RunService runService)
         {
-            runLogContext = new RunLogContext();
+            this.runService = runService;
         }
 
         [HttpGet]
         public RunsDto GetRuns()
         {
-            RunsDto runsDto = new RunsDto();
-            List<Run> runs = runLogContext.Runs.ToList();
-            runsDto.Runs = runs.ConvertAll<RunDto>(run => {
-                RunDto runDto = new RunDto
-                {
-                    Id = run.Id.ToString(),
-                    Title = run.Title,
-                    Description = run.Description,
-                    Distance = run.Distance,
-                    Duration = run.Duration,
-                    HeartRate = run.HeartRate,
-                    Date = run.Date,
-                };
-                return runDto;
-            });
-            return runsDto;
+            return runService.GetRuns(User.FindFirstValue(ClaimTypes.Name));
         }
 
         [HttpPost]
         public bool CreateRun(CreateRunDto createRunDto)
         {
-            Run run = new Run
-            {
-                Title = createRunDto.Title,
-                Description = createRunDto.Description,
-                Distance = createRunDto.Distance,
-                Duration = createRunDto.Duration,
-                HeartRate = createRunDto.HeartRate,
-                Date = createRunDto.Date
-            };
-            runLogContext.Runs.Add(run);
-            runLogContext.SaveChanges();
-            return true;
+            return runService.CreateRun(User.FindFirstValue(ClaimTypes.Name),createRunDto);
         }
         [HttpPut("{id:int}")]
         public bool UpdateRun(int id,  CreateRunDto createRunDto)
         {
-            Run newRun = new Run
-            {
-                Id = id,
-                Title = createRunDto.Title,
-                Description = createRunDto.Description,
-                Distance = createRunDto.Distance,
-                Duration = createRunDto.Duration,
-                HeartRate = createRunDto.HeartRate,
-                Date = createRunDto.Date
-            };
-            Run oldRun = runLogContext.Runs.Find(id);
-            runLogContext.Entry(oldRun).CurrentValues.SetValues(newRun);
-            runLogContext.SaveChanges();
-            return true;
+            return runService.UpdateRun(User.FindFirstValue(ClaimTypes.Name), id, createRunDto);
         }
         [HttpDelete("{id:int}")]
         public bool DeleteRun(int id)
         {
-            runLogContext.Runs.Remove(runLogContext.Runs.Find(id));
-            runLogContext.SaveChanges();
-            return true;
+            return runService.DeleteRun(User.FindFirstValue(ClaimTypes.Name), id);
         }
     }
 }
