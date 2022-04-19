@@ -61,7 +61,7 @@ namespace RunLog.Controllers
         {
             return userService.GetAthletes(showUnaffiliated? User.FindFirstValue(ClaimTypes.Name) : null);
         }
-        [Route("athletes/{athleteName}/coach")]
+        [Route("{athleteName}/coach")]
         [HttpPatch]
         public void SetAthletesCoach(string athleteName)
         {
