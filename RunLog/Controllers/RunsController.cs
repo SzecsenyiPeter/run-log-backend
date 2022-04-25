@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RunLog.Data;
 using RunLog.Dto;
 using RunLog.DTO;
-using RunLog.Model;
 using RunLog.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace RunLog.Controllers
 {

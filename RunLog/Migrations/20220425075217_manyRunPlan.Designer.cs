@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunLog.Data;
 
 namespace RunLog.Migrations
 {
     [DbContext(typeof(RunLogContext))]
-    partial class RunLogContextModelSnapshot : ModelSnapshot
+    [Migration("20220425075217_manyRunPlan")]
+    partial class manyRunPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -11,6 +11,7 @@ namespace RunLog.Data
     {
         public DbSet<Run> Runs { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RunPlan> RunPlans { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -18,6 +19,11 @@ namespace RunLog.Data
             //optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"));
             
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RunPlan>().HasOne(runPlan => runPlan.CreatedBy).WithMany(user => user.AssignedRunPlans);
+        }
+            
 
     }
 }

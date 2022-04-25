@@ -26,6 +26,7 @@ namespace RunLog
             services.AddControllers();
             services.Add(new ServiceDescriptor(typeof(UserService), new DefaultUserService()));
             services.Add(new ServiceDescriptor(typeof(RunService), new DefaultRunService()));
+            services.Add(new ServiceDescriptor(typeof(RunPlanService), new DefaultRunPlanService()));
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
