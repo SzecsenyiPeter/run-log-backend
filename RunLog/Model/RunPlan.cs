@@ -9,7 +9,6 @@ namespace RunLog.Model
     {
         public int Id { get; set; }
         public User CreatedBy { get; set; }
-        public List<User> AssignedTo { get; set; }
         public string Instructions { get; set; }
         public int Distance { get; set; }
         public DateTime Date { get; set; }

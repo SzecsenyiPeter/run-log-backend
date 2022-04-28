@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunLog.Data;
 
 namespace RunLog.Migrations
 {
     [DbContext(typeof(RunLogContext))]
-    partial class RunLogContextModelSnapshot : ModelSnapshot
+    [Migration("20220428081904_CollectionManyMany")]
+    partial class CollectionManyMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,28 +87,6 @@ namespace RunLog.Migrations
                     b.ToTable("RunPlans");
                 });
 
-            modelBuilder.Entity("RunLog.Model.RunPlanAssignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RunPlanId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RunPlanId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RunPlanAssignments");
-                });
-
             modelBuilder.Entity("RunLog.Model.User", b =>
                 {
                     b.Property<int>("Id")
@@ -120,6 +100,9 @@ namespace RunLog.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RunPlanId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserType")
                         .HasColumnType("int");
 
@@ -129,6 +112,8 @@ namespace RunLog.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CoachedById");
+
+                    b.HasIndex("RunPlanId");
 
                     b.ToTable("Users");
                 });
@@ -151,29 +136,10 @@ namespace RunLog.Migrations
             modelBuilder.Entity("RunLog.Model.RunPlan", b =>
                 {
                     b.HasOne("RunLog.Model.User", "CreatedBy")
-                        .WithMany()
+                        .WithMany("AssignedRunPlans")
                         .HasForeignKey("CreatedById");
 
                     b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("RunLog.Model.RunPlanAssignment", b =>
-                {
-                    b.HasOne("RunLog.Model.RunPlan", "RunPlan")
-                        .WithMany()
-                        .HasForeignKey("RunPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RunLog.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RunPlan");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RunLog.Model.User", b =>
@@ -182,7 +148,21 @@ namespace RunLog.Migrations
                         .WithMany()
                         .HasForeignKey("CoachedById");
 
+                    b.HasOne("RunLog.Model.RunPlan", null)
+                        .WithMany("AssignedTo")
+                        .HasForeignKey("RunPlanId");
+
                     b.Navigation("CoachedBy");
+                });
+
+            modelBuilder.Entity("RunLog.Model.RunPlan", b =>
+                {
+                    b.Navigation("AssignedTo");
+                });
+
+            modelBuilder.Entity("RunLog.Model.User", b =>
+                {
+                    b.Navigation("AssignedRunPlans");
                 });
 #pragma warning restore 612, 618
         }

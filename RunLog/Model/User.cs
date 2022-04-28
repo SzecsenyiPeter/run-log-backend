@@ -17,6 +17,5 @@ namespace RunLog.Model
         public String PasswordHash { get; set; }
         public UserTypes UserType { get; set; }
         public User CoachedBy { get; set; }
-        public List<RunPlan> AssignedRunPlans { get; set; }
     }
 }
