@@ -57,9 +57,9 @@ namespace RunLog.Controllers
         }
         [Route("athletes")]
         [HttpGet]
-        public List<string> GetAthletes(bool showUnaffiliated)
+        public List<string> GetAthletes([FromQuery(Name = "show-own")]bool shownOwn)
         {
-            return userService.GetAthletes(showUnaffiliated? User.FindFirstValue(ClaimTypes.Name) : null);
+            return userService.GetAthletes(shownOwn? User.FindFirstValue(ClaimTypes.Name) : null);
         }
         [Route("{athleteName}/coach")]
         [HttpPatch]

@@ -43,5 +43,31 @@ namespace RunLog.Service
             }
             runLogContext.SaveChanges();
         }
+        public ICollection<RunPlan> GetRunPlans(string username)
+        {
+            User user = runLogContext.Users.SingleOrDefault(user => user.Username == username);
+            switch(user.UserType)
+            {
+                case UserTypes.ATHLETE:
+                    return GetRunPlansForAthlete(user);
+                case UserTypes.COACH:
+                    return GetRunPlansByCoach(user);
+            }
+            throw new ArgumentException("There is no such user type!");
+        }
+        private ICollection<RunPlan> GetRunPlansForAthlete(User athlete)
+        {
+            return runLogContext.RunPlanAssignments
+                .Where(runPlanAssigment => runPlanAssigment.UserId == athlete.Id)
+                .ToList()
+                .ConvertAll(runPlanAssignment => runPlanAssignment.RunPlan);
+        }
+        private ICollection<RunPlan> GetRunPlansByCoach(User coach)
+        {
+            return runLogContext.RunPlanAssignments
+                .Where(runPlanAssigment => runPlanAssigment.User.CoachedBy.Id == coach.Id)
+                .ToList()
+                .ConvertAll(runPlanAssignment => runPlanAssignment.RunPlan);
+        }
     }
 }
