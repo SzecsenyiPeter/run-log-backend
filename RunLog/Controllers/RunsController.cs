@@ -20,9 +20,9 @@ namespace RunLog.Controllers
         }
 
         [HttpGet]
-        public RunsDto GetRuns()
+        public RunsDto GetRuns([FromQuery(Name = "athlete")]string athlete)
         {
-            return runService.GetRuns(User.FindFirstValue(ClaimTypes.Name));
+            return runService.GetRuns(athlete ?? User.FindFirstValue(ClaimTypes.Name));
         }
 
         [HttpPost]

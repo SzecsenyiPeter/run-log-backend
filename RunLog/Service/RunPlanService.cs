@@ -10,6 +10,6 @@ namespace RunLog.Service
     public interface RunPlanService
     {
         public void CreateRunPlan(string user, CreateRunPlanDto createRunPlanDto);
-        public ICollection<RunPlan> GetRunPlans(string username);
+        public ICollection<RunPlanDto> GetRunPlans(string username);
     }
 }
