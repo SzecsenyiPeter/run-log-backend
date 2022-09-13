@@ -25,6 +25,12 @@ namespace RunLog.Controllers
             return runService.GetRuns(athlete ?? User.FindFirstValue(ClaimTypes.Name));
         }
 
+        [HttpGet("my-athletes")]
+        public RunsDto GetRunsByAthletesCoachedByMe()
+        {
+            return runService.GetRunsOfCoachedAthletes(User.FindFirstValue(ClaimTypes.Name));
+        }
+
         [HttpPost]
         public bool CreateRun(CreateRunDto createRunDto)
         {

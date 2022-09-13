@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RunLog.Data;
 using RunLog.Service;
 
 namespace RunLog
@@ -24,9 +25,10 @@ namespace RunLog
         {
 
             services.AddControllers();
-            services.Add(new ServiceDescriptor(typeof(UserService), new DefaultUserService()));
-            services.Add(new ServiceDescriptor(typeof(RunService), new DefaultRunService()));
-            services.Add(new ServiceDescriptor(typeof(RunPlanService), new DefaultRunPlanService()));
+            services.AddTransient<RunLogContext>();
+            services.AddScoped<UserService, DefaultUserService>();
+            services.AddScoped<RunService, DefaultRunService>();
+            services.AddScoped<RunPlanService, DefaultRunPlanService>();
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

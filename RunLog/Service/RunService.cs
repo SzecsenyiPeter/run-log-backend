@@ -10,6 +10,7 @@ namespace RunLog.Service
     public interface RunService
     {
         public RunsDto GetRuns(string username);
+        public RunsDto GetRunsOfCoachedAthletes(string coachName);
         public bool CreateRun(string username, CreateRunDto createRunDto);
         public bool UpdateRun(string username, int id, CreateRunDto createRunDto);
         public bool DeleteRun(string username, int id);

@@ -13,11 +13,12 @@ namespace RunLog.Service
     {
         
         private readonly RunLogContext runLogContext;
-        public DefaultUserService()
-        {
-            runLogContext = new RunLogContext();
 
+        public DefaultUserService(RunLogContext runLogContext)
+        {
+            this.runLogContext = runLogContext;
         }
+
         public void RegisterUser(UserDto createUser)
         {
             User newUser = new User

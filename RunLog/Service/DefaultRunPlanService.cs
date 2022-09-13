@@ -1,20 +1,18 @@
-﻿using RunLog.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RunLog.Data;
 using RunLog.Dto;
 using RunLog.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RunLog.Service
 {
     public class DefaultRunPlanService : RunPlanService
     {
         private readonly RunLogContext runLogContext;
-
-        public DefaultRunPlanService()
+        public DefaultRunPlanService(RunLogContext runLogContext)
         {
-            runLogContext = new RunLogContext();
+            this.runLogContext = runLogContext;
         }
         public void CreateRunPlan(string username, CreateRunPlanDto createRunPlanDto)
         {
@@ -48,8 +46,9 @@ namespace RunLog.Service
             User user = runLogContext.Users.SingleOrDefault(user => user.Username == username);
             return runLogContext.RunPlanAssignments
                 .Where(runPlanAssigment => runPlanAssigment.UserId == user.Id)
+                .Include(runPlanAssigment => runPlanAssigment.RunPlan)
                 .ToList()
-                .ConvertAll(runPlanAssignment => runLogContext.RunPlans.Where(runPlan => runPlan.Id == runPlanAssignment.Id).First())
+                .ConvertAll(runPlanAssignment => runLogContext.RunPlans.Where(runPlan => runPlan.Id == runPlanAssignment.RunPlanId).First())
                 .ConvertAll(runPlan => new RunPlanDto
                 {
                     Id = runPlan.Id,

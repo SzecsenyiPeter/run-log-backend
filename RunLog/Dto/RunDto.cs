@@ -16,6 +16,11 @@ namespace RunLog.DTO
         [JsonPropertyName("title")]
         [Required]
         public string Title { get; set; }
+
+        [JsonPropertyName("name")]
+        [Required]
+        public string Name { get; set; }
+
         [JsonPropertyName("description")]
         public string Description { get; set; }
 

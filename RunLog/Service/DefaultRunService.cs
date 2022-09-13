@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RunLog.Service
 {
@@ -13,10 +14,11 @@ namespace RunLog.Service
     {
         private readonly RunLogContext runLogContext;
 
-        public DefaultRunService()
+        public DefaultRunService(RunLogContext runLogContext)
         {
-            runLogContext = new RunLogContext();
+            this.runLogContext = runLogContext;
         }
+
         public bool CreateRun(string username, CreateRunDto createRunDto)
         {
             User user = runLogContext.Users.SingleOrDefault(user => user.Username == username);
@@ -45,20 +47,21 @@ namespace RunLog.Service
         public RunsDto GetRuns(string username)
         {
             RunsDto runsDto = new RunsDto();
-            List<Run> runs = runLogContext.Runs.Where(run => run.RanBy.Username == username).ToList();
-            runsDto.Runs = runs.ConvertAll<RunDto>(run => {
-                RunDto runDto = new RunDto
-                {
-                    Id = run.Id.ToString(),
-                    Title = run.Title,
-                    Description = run.Description,
-                    Distance = run.Distance,
-                    Duration = run.Duration,
-                    HeartRate = run.HeartRate,
-                    Date = run.Date,
-                };
-                return runDto;
-            });
+            List<Run> runs = runLogContext.Runs
+                .Where(run => username.Equals(run.RanBy.Username))
+                .Include(run => run.RanBy)
+                .ToList();
+            runsDto.Runs = toListOfRunDto(runs);
+            return runsDto;
+        }
+        public RunsDto GetRunsOfCoachedAthletes(string coachName)
+        {
+            RunsDto runsDto = new RunsDto();
+            List<Run> runs = runLogContext.Runs
+                .Where(run => run.RanBy.CoachedBy.Username == coachName)
+                .Include(run => run.RanBy)
+                .ToList();
+            runsDto.Runs = toListOfRunDto(runs);
             return runsDto;
         }
 
@@ -78,6 +81,23 @@ namespace RunLog.Service
             runLogContext.Entry(oldRun).CurrentValues.SetValues(newRun);
             runLogContext.SaveChanges();
             return true;
+        }
+        private List<RunDto> toListOfRunDto(List<Run> runs)
+        {
+            return runs.ConvertAll<RunDto>(run => {
+                RunDto runDto = new RunDto
+                {
+                    Id = run.Id.ToString(),
+                    Title = run.Title,
+                    Description = run.Description,
+                    Distance = run.Distance,
+                    Duration = run.Duration,
+                    HeartRate = run.HeartRate,
+                    Name = run.RanBy.Username,
+                    Date = run.Date,
+                };
+                return runDto;
+            });
         }
     }
 }
