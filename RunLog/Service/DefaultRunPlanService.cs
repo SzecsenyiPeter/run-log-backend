@@ -22,6 +22,8 @@ namespace RunLog.Service
                 CreatedBy = user,
                 Instructions = createRunPlanDto.Instructions,
                 Distance = createRunPlanDto.Distance,
+                Duration = createRunPlanDto.Duration,
+                HeartRate = createRunPlanDto.HeartRate,
                 Date = createRunPlanDto.Date,
             };
             runLogContext.RunPlans.Add(runPlan);
@@ -55,6 +57,8 @@ namespace RunLog.Service
                     AssignedTo = username,
                     Instructions = runPlan.Instructions,
                     Distance = runPlan.Distance,
+                    Duration = runPlan.Duration,
+                    HeartRate = runPlan.HeartRate,
                     Date = runPlan.Date,
                 }) ;
         }

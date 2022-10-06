@@ -14,7 +14,12 @@ namespace RunLog.Dto
         [Required]
         public string Instructions { get; set; }
         [JsonPropertyName("distance")]
+        [Required]
         public int Distance { get; set; }
+        [JsonPropertyName("heartRate")]
+        public int? HeartRate { get; set; }
+        [JsonPropertyName("duration")]
+        public int? Duration { get; set; }
         [JsonPropertyName("date")]
         public DateTime Date { get; set; }
     }

@@ -24,6 +24,11 @@ namespace RunLog.Controllers
         {
             return runService.GetRuns(athlete ?? User.FindFirstValue(ClaimTypes.Name));
         }
+        [HttpGet("{id:int}")]
+        public RunDto UpdateRun(int id)
+        {
+            return runService.GetRun(id);
+        }
 
         [HttpGet("my-athletes")]
         public RunsDto GetRunsByAthletesCoachedByMe()
@@ -35,6 +40,11 @@ namespace RunLog.Controllers
         public bool CreateRun(CreateRunDto createRunDto)
         {
             return runService.CreateRun(User.FindFirstValue(ClaimTypes.Name),createRunDto);
+        }
+        [HttpPost("{runId:int}/link-plan/{planId:int}")]
+        public void LinkWithRunPlan(int runId, int planId)
+        {
+            runService.LinkWithRunPlan(runId, planId);
         }
         [HttpPut("{id:int}")]
         public bool UpdateRun(int id,  CreateRunDto createRunDto)

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunLog.Data;
 
 namespace RunLog.Migrations
 {
     [DbContext(typeof(RunLogContext))]
-    partial class RunLogContextModelSnapshot : ModelSnapshot
+    [Migration("20220928191339_ExtendRunPlanWIthDurationAndHeartRate")]
+    partial class ExtendRunPlanWIthDurationAndHeartRate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,10 +77,10 @@ namespace RunLog.Migrations
                     b.Property<int>("Distance")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Duration")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<int?>("HeartRate")
+                    b.Property<int>("HeartRate")
                         .HasColumnType("int");
 
                     b.Property<string>("Instructions")

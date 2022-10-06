@@ -44,12 +44,22 @@ namespace RunLog.Service
             return true;
         }
 
+        public RunDto GetRun(int id)
+        {
+            Run run = runLogContext.Runs
+                .Include(run => run.RanBy)
+                .Include(run => run.CompletedPlan)
+                .First(run => run.Id == id);
+            return toRunDto(run);
+        }
+
         public RunsDto GetRuns(string username)
         {
             RunsDto runsDto = new RunsDto();
             List<Run> runs = runLogContext.Runs
                 .Where(run => username.Equals(run.RanBy.Username))
                 .Include(run => run.RanBy)
+                .Include(run => run.CompletedPlan)
                 .ToList();
             runsDto.Runs = toListOfRunDto(runs);
             return runsDto;
@@ -63,6 +73,15 @@ namespace RunLog.Service
                 .ToList();
             runsDto.Runs = toListOfRunDto(runs);
             return runsDto;
+        }
+
+        public void LinkWithRunPlan(int runId, int runPlanId)
+        {
+            Run run = runLogContext.Runs.Find(runId);
+            RunPlan runPlan = runLogContext.RunPlans.Find(runPlanId);
+            run.CompletedPlan = runPlan;
+            runLogContext.SaveChanges();
+
         }
 
         public bool UpdateRun(string username, int id, CreateRunDto createRunDto)
@@ -84,20 +103,36 @@ namespace RunLog.Service
         }
         private List<RunDto> toListOfRunDto(List<Run> runs)
         {
-            return runs.ConvertAll<RunDto>(run => {
-                RunDto runDto = new RunDto
+            return runs.ConvertAll<RunDto>(toRunDto);
+        }
+
+        private RunDto toRunDto(Run run)
+        {
+            RunPlanDto linkedRun = null;
+            if(run.CompletedPlan != null)
+            {
+                linkedRun = new RunPlanDto
                 {
-                    Id = run.Id.ToString(),
-                    Title = run.Title,
-                    Description = run.Description,
-                    Distance = run.Distance,
-                    Duration = run.Duration,
-                    HeartRate = run.HeartRate,
-                    Name = run.RanBy.Username,
-                    Date = run.Date,
+                    Id = run.CompletedPlan.Id,
+                    Instructions = run.CompletedPlan.Instructions,
+                    Distance = run.CompletedPlan.Distance,
+                    Duration = run.CompletedPlan.Duration,
+                    HeartRate = run.CompletedPlan.HeartRate,
+                    Date = run.CompletedPlan.Date,
                 };
-                return runDto;
-            });
+            }
+            return new RunDto
+            {
+                Id = run.Id.ToString(),
+                Title = run.Title,
+                Description = run.Description,
+                Distance = run.Distance,
+                Duration = run.Duration,
+                HeartRate = run.HeartRate,
+                Name = run.RanBy.Username,
+                CompletedRunPlan = linkedRun,
+                Date = run.Date,
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RunLog.Dto;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,6 +36,9 @@ namespace RunLog.DTO
         [JsonPropertyName("heartRate")]
         [Required]
         public int HeartRate { get; set; }
+        [JsonPropertyName("completedRunPlan")]
+        [Required]
+        public RunPlanDto CompletedRunPlan { get; set; }
 
         [JsonPropertyName("date")]
         [Required]
